@@ -8,7 +8,7 @@ from fabric.api import run
 
 
 env.user = 'ubuntu'
-
+env.key_filename = ['~/.ssh/authorized_keys']
 env.hosts = ['54.237.87.200', '52.86.189.30']
 
 
