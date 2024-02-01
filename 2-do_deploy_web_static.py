@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-# Fabfile to distribute an archive to a web server.
-
+""" Function that compress a folder """
 import os.path
 from fabric.api import env
 from fabric.api import put
@@ -8,7 +7,7 @@ from fabric.api import run
 
 
 env.hosts = ['54.237.87.200', '52.86.189.30']
-# env.user = "ubuntu"
+env.user = "ubuntu"
 
 
 def do_deploy(archive_path):
