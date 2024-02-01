@@ -4,7 +4,6 @@ from fabric.api import local
 import time
 
 
-
 def do_pack():
     """Generate an tgz archive from web_static folder"""
     try:
@@ -13,5 +12,6 @@ def do_pack():
               format(time.strftime("%Y%m%d%H%M%S")))
         return ("versions/web_static_{}.tgz".format(time.
                                                     strftime("%Y%m%d%H%M%S")))
-    except:
+    except OSError as e:
+        print("Error: {}".format(e))
         return None
