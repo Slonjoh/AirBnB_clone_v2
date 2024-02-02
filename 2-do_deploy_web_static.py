@@ -21,7 +21,8 @@ def do_deploy(archive_path):
     result = run("sudo rm -rf /data/web_static/releases/{}/".format(fileName))
     if result.failed:
         return False
-    result = run("sudo mkdir -p /data/web_static/releases/{}/".format(fileName))
+    result = run("sudo mkdir -p /data/web_static/releases/{}/"
+                 .format(fileName))
     if result.failed:
         return False
     result = run("sudo tar -xzf /tmp/{} -C /data/web_static/releases/{}/"
@@ -43,8 +44,8 @@ def do_deploy(archive_path):
     result = run("sudo rm -rf /data/web_static/current")
     if result.failed:
         return False
-    result = run("sudo ln -s /data/web_static/releases/{}/ /data/web_static/current"
-                 .format(fileName))
+    result = run("sudo ln -s /data/web_static/releases/{}/ "
+                 "/data/web_static/current".format(fileName))
     if result.failed:
         return False
     print("New version deployed!")
