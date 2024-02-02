@@ -1,56 +1,52 @@
 #!/usr/bin/python3
-"""
-file to practice use of Fabric
-"""
+"""Create and distributes an archive to web servers"""
 import os.path
-from fabric.api import *
-from fabric.operations import run, put, sudo
 import time
-
+from fabric.api import local
+from fabric.operations import env, put, run
 
 env.hosts = ['54.237.87.200', '52.86.189.30']
+env.user = 'ubuntu'
 
 
 def do_pack():
-    timestr = time.strftime("%Y%m%d%H%M%S")
+    """Generate an tgz archive from web_static folder"""
     try:
         local("mkdir -p versions")
         local("tar -cvzf versions/web_static_{}.tgz web_static/".
-              format(timestr))
-        return ("versions/web_static_{}.tgz".format(timestr))
-    except Exception as e:
-        print(f"Error during deployment: {e}")
+              format(time.strftime("%Y%m%d%H%M%S")))
+        return ("versions/web_static_{}.tgz".format(time.
+                                                    strftime("%Y%m%d%H%M%S")))
+    except:
         return None
 
 
 def do_deploy(archive_path):
-    """ deploy """
+    """Distribute an archive to web servers"""
     if (os.path.isfile(archive_path) is False):
         return False
 
     try:
-        new_comp = archive_path.split("/")[-1]
-        new_folder = ("/data/web_static/releases/" + new_comp.split(".")[0])
+        file = archive_path.split("/")[-1]
+        folder = ("/data/web_static/releases/" + file.split(".")[0])
         put(archive_path, "/tmp/")
-        run("sudo mkdir -p {}".format(new_folder))
-        run("sudo tar -xzf /tmp/{} -C {}".
-            format(new_comp, new_folder))
-        run("sudo rm /tmp/{}".format(new_comp))
-        run("sudo mv {}/web_static/* {}/".format(new_folder, new_folder))
-        run("sudo rm -rf {}/web_static".format(new_folder))
+        run("sudo mkdir -p {}".format(folder))
+        run("sudo tar -xzf /tmp/{} -C {}".format(file, folder))
+        run("sudo rm /tmp/{}".format(file))
+        run("sudo mv {}/web_static/* {}/".format(folder, folder))
+        run("sudo rm -rf {}/web_static".format(folder))
         run('sudo rm -rf /data/web_static/current')
-        run("sudo ln -s {} /data/web_static/current".format(new_folder))
+        run("sudo ln -s {} /data/web_static/current".format(folder))
+        print("Deployment done")
         return True
-    except Exception as e:
-        print(f"Error during deployment: {e}")
+    except:
         return False
 
 
 def deploy():
+    """Create and distributes an archive to web servers"""
     try:
-        archive_address = do_pack()
-        val = do_deploy(archive_address)
-        return val
-    except Exception as e:
-        print(f"Error during deployment: {e}")
+        path = do_pack()
+        return do_deploy(path)
+    except:
         return False
