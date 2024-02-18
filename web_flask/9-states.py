@@ -10,23 +10,23 @@ Very Simple Flask hello world
 app = Flask(__name__)
 
 
-@app.route('/states/')
-@app.route('/states')
-@app.route('/states/<state_id>')
-def state_info(state_id="(nil)"):
+@app.route("/states", strict_slashes=False)
+def states():
+    """Displays an HTML page with a list of all States.
+
+    States are sorted by name.
     """
-    Inserts all Cities in each State from the database to the DOM
-    """
-    storall = storage.all("State").values()
-    state = "Not found!" if state_id != "(nil)" else state_id
-    for states in storall:
-        if states.id == state_id:
-            state = states
-    return (Response(render_template(
-        '9-states.html',
-        states=storall,
-        state_id=state))
-        )
+    states = storage.all("State")
+    return render_template("9-states.html", state=states)
+
+
+@app.route("/states/<id>", strict_slashes=False)
+def states_id(id):
+    """Displays an HTML page with info about <id>, if it exists."""
+    for state in storage.all("State").values():
+        if state.id == id:
+            return render_template("9-states.html", state=state)
+    return render_template("9-states.html")
 
 
 @app.teardown_appcontext
