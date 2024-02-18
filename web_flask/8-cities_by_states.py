@@ -23,5 +23,11 @@ def cities_by_states():
     return render_template("8-cities_by_states.html", states=sorted_states)
 
 
+@app.after_request
+def add_headers(response):
+    response.headers['Server'] = "apache/2.4.7"
+    return (response)
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
