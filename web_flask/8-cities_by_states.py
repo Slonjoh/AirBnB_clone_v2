@@ -25,7 +25,7 @@ def cities_by_states():
 
 @app.after_request
 def add_headers(response):
-    response.headers['Server'] = "apache/2.4.7"
+    response.headers['Server'] = "apache/2.4.58"
     return (response)
 
 
