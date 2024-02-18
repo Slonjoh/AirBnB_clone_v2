@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from flask import Flask, Response
+from flask import Flask
 from flask import render_template
 from models import storage
 """
