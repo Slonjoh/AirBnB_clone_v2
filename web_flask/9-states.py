@@ -1,11 +1,14 @@
 #!/usr/bin/python3
+"""Starts a Flask web application.
+
+The application listens on 0.0.0.0, port 5000.
+Routes:
+    /states: HTML page with a list of all State objects.
+    /states/<id>: HTML page displaying the given state with <id>.
+"""
+from models import storage
 from flask import Flask
 from flask import render_template
-from models import storage
-"""
-Very Simple Flask hello world
-"""
-
 
 app = Flask(__name__)
 
@@ -30,20 +33,9 @@ def states_id(id):
 
 
 @app.teardown_appcontext
-def teardown(exception):
-    """
-    Tears down the db connection
-    """
+def teardown(exc):
+    """Remove the current SQLAlchemy session."""
     storage.close()
-
-
-@app.after_request
-def add_headers(response):
-    """
-    Sets a custom http header
-    """
-    response.headers['Server'] = "apache/2.4.58"
-    return (response)
 
 
 if __name__ == "__main__":
